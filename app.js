@@ -12,7 +12,8 @@ const app = Vue.createApp({
         return {
             myHealth: maxHealth,
             monsterHealth: maxHealth,
-            gameRound: 0
+            gameRound: 0,
+            winner: null
         };
     },
     methods: {
@@ -59,6 +60,23 @@ const app = Vue.createApp({
         enableSpecialAttack(){
             //how come {} disrupt the return if added?
             return this.gameRound % 3 !== 0
+        }
+    },
+    watch: {
+        myHealth(value){
+            if (value <=0 && this.monsterHealth <=0){
+                //a draw
+                this.winner = 'DRAW';
+            } else if (value <= 0){
+                this.winner = 'MONSTER';
+            }
+        },
+        monsterHealth(value){
+            if (value <=0 && this.myHealth <=0){
+                this.winner = 'DRAW';
+            } else if (value <= 0){
+                this.winner = 'PLAYER';
+            }
         }
     }
 });
