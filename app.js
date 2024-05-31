@@ -48,34 +48,53 @@ const app = Vue.createApp({
             this.gameRound++;
             //monster can still attack
             this.monsterAttacks();
+        },
+        startNewGame(){
+            this.myHealth = maxHealth;
+            this.monsterHealth = maxHealth;
+            this.gameRound = 0;
+            this.winner = null;
+        },
+        playerSurrenders(){
+            this.winner = 'monster';
         }
     },
     computed: {
         monsterHealthBarStyle() {
-            return {width: this.monsterHealth + '%'}
+            if (this.monsterHealth < 0){
+                //-ve value cannot be displayed so we need to set it exactly to 0
+                return {width:'0%'};
+            }
+            return {width: this.monsterHealth + '%'};
         },
         myHealthBarStyle(){
-            return {width: this.myHealth + '%'}
+            if (this.myHealth < 0){
+                return {width:'0%'};
+            }
+            return {width: this.myHealth + '%'};
         },
         enableSpecialAttack(){
             //how come {} disrupt the return if added?
-            return this.gameRound % 3 !== 0
+            return this.gameRound % 3 !== 0;
         }
     },
     watch: {
         myHealth(value){
             if (value <=0 && this.monsterHealth <=0){
                 //a draw
-                this.winner = 'DRAW';
+                this.winner = 'draw';
             } else if (value <= 0){
-                this.winner = 'MONSTER';
+                //player lost
+                this.winner = 'monster';
             }
         },
         monsterHealth(value){
             if (value <=0 && this.myHealth <=0){
-                this.winner = 'DRAW';
+                //a draw
+                this.winner = 'draw';
             } else if (value <= 0){
-                this.winner = 'PLAYER';
+                //monster lost
+                this.winner = 'player';
             }
         }
     }
