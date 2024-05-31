@@ -10,6 +10,7 @@ const app = Vue.createApp({
         return {
             myHealth: 100,
             monsterHealth: 100,
+            gameRound: 0
         };
     },
     methods: {
@@ -18,6 +19,8 @@ const app = Vue.createApp({
             //reduce monster health by damage
             this.monsterHealth = this.monsterHealth - playerAttackValue;
             this.monsterAttacks();
+            //everytime method is called is 1 round
+            this.gameRound++;
         },
         monsterAttacks(){
             const monsterAttackValue = getAttackValue(10, 20);
@@ -29,7 +32,9 @@ const app = Vue.createApp({
             this.monsterHealth -= playerAttackValue;
             this.monsterAttacks();
             //make available only after playerAttacks is clicked 3 times
-        }
+            this.gameRound++;
+        },
+        
     },
     computed: {
         monsterHealthBarStyle() {
@@ -37,6 +42,10 @@ const app = Vue.createApp({
         },
         myHealthBarStyle(){
             return {width: this.myHealth + '%'}
+        },
+        enableSpecialAttack(){
+            //how come {} disrupt the return if added?
+            return this.gameRound % 3 !== 0
         }
     }
 });
