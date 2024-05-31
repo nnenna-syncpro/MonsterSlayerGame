@@ -47,7 +47,9 @@
       </section>
       <section id="log" class="container">
         <h2>Battle Log</h2>
-        <ul></ul>
+        <ul>
+          <li v-for="log in battleLog">{{ log.by }} {{log.action}} - {{log.value}}</li>
+        </ul>
       </section>
     </div>
   </body>

@@ -13,7 +13,8 @@ const app = Vue.createApp({
             myHealth: maxHealth,
             monsterHealth: maxHealth,
             gameRound: 0,
-            winner: null
+            winner: null,
+            battleLog: []
         };
     },
     methods: {
@@ -21,6 +22,7 @@ const app = Vue.createApp({
             const playerAttackValue = getAttackValue(5, 15);
             //reduce monster health by damage
             this.monsterHealth = this.monsterHealth - playerAttackValue;
+            this.battleLogMessages('Player', 'attack', playerAttackValue);
             this.monsterAttacks();
             //everytime method is called is 1 round
             this.gameRound++;
@@ -29,10 +31,12 @@ const app = Vue.createApp({
             const monsterAttackValue = getAttackValue(10, 20);
             //reduce player health by damage
             this.myHealth -= monsterAttackValue;
+            this.battleLogMessages('Monster', 'attack', monsterAttackValue);
         },
         playerSpecialAttack() {
             const playerAttackValue = getAttackValue(20, 30);
             this.monsterHealth -= playerAttackValue;
+            this.battleLogMessages('Player', 'special attack', playerAttackValue);
             this.monsterAttacks();
             //make available only after playerAttacks is clicked 3 times
             this.gameRound++;
@@ -46,17 +50,28 @@ const app = Vue.createApp({
             }
             //healing counts as 1 round
             this.gameRound++;
+            this.battleLogMessages('Player', 'heals', playerHealValue);
             //monster can still attack
             this.monsterAttacks();
         },
         startNewGame(){
+            //reset all data properties
             this.myHealth = maxHealth;
             this.monsterHealth = maxHealth;
             this.gameRound = 0;
             this.winner = null;
+            this.battleLog = [];
         },
         playerSurrenders(){
             this.winner = 'monster';
+        },
+        battleLogMessages(who, what, value){
+            //unshoft is like push but adds at the begining not the end
+            this.battleLog.unshift({
+                by: who,
+                action: what,
+                value: value
+            });
         }
     },
     computed: {
