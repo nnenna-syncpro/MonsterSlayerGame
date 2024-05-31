@@ -4,12 +4,14 @@ function getAttackValue(min, max) {
     return Math.floor(Math.random() *(max - min)) + min;
 }
 
+const maxHealth = 100;
+
 
 const app = Vue.createApp({
     data() {
         return {
-            myHealth: 100,
-            monsterHealth: 100,
+            myHealth: maxHealth,
+            monsterHealth: maxHealth,
             gameRound: 0
         };
     },
@@ -28,13 +30,24 @@ const app = Vue.createApp({
             this.myHealth -= monsterAttackValue;
         },
         playerSpecialAttack() {
-            const playerAttackValue = getAttackValue(15, 30);
+            const playerAttackValue = getAttackValue(20, 30);
             this.monsterHealth -= playerAttackValue;
             this.monsterAttacks();
             //make available only after playerAttacks is clicked 3 times
             this.gameRound++;
         },
-        
+        healPlayer() {
+            playerHealValue = getAttackValue(15, 25);
+            if (this.myHealth + playerHealValue > maxHealth){
+                this.myHealth = maxHealth
+            } else{
+                this.myHealth += playerHealValue;
+            }
+            //healing counts as 1 round
+            this.gameRound++;
+            //monster can still attack
+            this.monsterAttacks();
+        }
     },
     computed: {
         monsterHealthBarStyle() {
